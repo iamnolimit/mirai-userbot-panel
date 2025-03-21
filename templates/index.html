@@ -7,132 +7,206 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
       body {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-        background-size: 400% 400%;
-        animation: gradient 15s ease infinite;
-      }
-      
-      @keyframes gradient {
-        0% {
-          background-position: 0% 50%;
-        }
-        50% {
-          background-position: 100% 50%;
-        }
-        100% {
-          background-position: 0% 50%;
-        }
-      }
-      
-      .glass-effect {
-        background: rgba(255, 255, 255, 0.25);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-        border-radius: 10px;
-      }
-      
-      .main-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding-top: 75px; /* Kompensasi untuk fixed navbar */
-      }
-      
-      .navigation-container {
-        margin-top: auto;
-        padding: 1.5rem 0;
-        display: flex;
-        justify-content: center;
-      }
-      
-      .nav-buttons {
-        display: flex;
-        gap: 1rem;
-      }
-      
-      .content-container {
-        max-width: 600px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-      
-      .button-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-      }
-      
-      .doc-button {
-        height: 100px; /* Fixed height for all buttons */
-        width: 100%; /* Full width within grid cell */
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-start;
-        text-align: left;
-        transition: transform 0.2s, box-shadow 0.2s;
-        background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(5px);
-        -webkit-backdrop-filter: blur(5px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
-        padding: 1rem;
-        color: white;
-      }
-      
-      .doc-button:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        background: rgba(255, 255, 255, 0.3);
-      }
-      
-      .navbar {
-        background: rgba(255, 255, 255, 0.2) !important;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      }
-      
-      .nav-button {
-        background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(5px);
-        -webkit-backdrop-filter: blur(5px);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        color: white;
-        padding: 0.5rem 1.5rem;
-        transition: all 0.3s;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      }
-      
-      .nav-button:hover:not(:disabled) {
-        background: rgba(255, 255, 255, 0.3);
-        transform: translateY(-3px);
-        box-shadow: 0 7px 14px rgba(0, 0, 0, 0.2);
-      }
-      
-      .nav-button:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
-      
-      .modal-content {
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-      }
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #000;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Create the balls/spheres background */
+.background-animation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.sphere {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.1));
+  filter: blur(2px);
+  opacity: 0;
+  animation: float 15s infinite ease-in-out;
+}
+
+.sphere:nth-child(1) {
+  width: 200px;
+  height: 200px;
+  left: 10%;
+  top: 20%;
+  background: radial-gradient(circle at 30% 30%, rgba(125, 90, 255, 0.4), rgba(125, 90, 255, 0.1));
+  animation-delay: 0s;
+}
+
+.sphere:nth-child(2) {
+  width: 300px;
+  height: 300px;
+  right: 10%;
+  top: 10%;
+  background: radial-gradient(circle at 30% 30%, rgba(90, 120, 255, 0.4), rgba(90, 120, 255, 0.1));
+  animation-delay: 2s;
+}
+
+.sphere:nth-child(3) {
+  width: 180px;
+  height: 180px;
+  left: 30%;
+  bottom: 20%;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 90, 200, 0.3), rgba(255, 90, 200, 0.1));
+  animation-delay: 4s;
+}
+
+.sphere:nth-child(4) {
+  width: 250px;
+  height: 250px;
+  right: 25%;
+  bottom: 15%;
+  background: radial-gradient(circle at 30% 30%, rgba(90, 210, 255, 0.3), rgba(90, 210, 255, 0.1));
+  animation-delay: 6s;
+}
+
+.sphere:nth-child(5) {
+  width: 150px;
+  height: 150px;
+  left: 50%;
+  top: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 120, 90, 0.3), rgba(255, 120, 90, 0.1));
+  animation-delay: 8s;
+}
+
+@keyframes float {
+  0% {
+    transform: translate(0, 0) scale(0.8);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(20px, -30px) scale(1);
+    opacity: 0.8;
+  }
+  75% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate(0, 0) scale(0.8);
+    opacity: 0;
+  }
+}
+
+/* Maintain the other styles but modify for dark theme */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  border-radius: 10px;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 75px;
+  z-index: 1;
+}
+
+/* Update button styling for dark theme */
+.doc-button {
+  height: 100px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: left;
+  transition: transform 0.2s, box-shadow 0.2s;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 1rem;
+  color: white;
+}
+
+.doc-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.navbar {
+  background: rgba(0, 0, 0, 0.2) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.nav-button {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: white;
+  padding: 0.5rem 1.5rem;
+  transition: all 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+}
+
+.nav-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-3px);
+  box-shadow: 0 7px 14px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content {
+  background: rgba(20, 20, 20, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  color: white;
+}
+
+.modal-header, .modal-footer {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.btn-close {
+  filter: invert(1);
+}
+
+.list-group-item {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: white;
+}
     </style>
   </head>
   <body>
     <!-- Navbar with Glass effect -->
+
+    <div class="background-animation">
+      <div class="sphere"></div>
+      <div class="sphere"></div>
+      <div class="sphere"></div>
+      <div class="sphere"></div>
+      <div class="sphere"></div>
+    </div>
+    
     <nav class="navbar navbar-expand navbar-dark fixed-top">
       <div class="container">
         <a class="navbar-brand" href="#">Dokumentasi</a>
@@ -171,7 +245,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     
-    <script>
+    <script type="module">
       // Pagination configuration
       const buttonsPerPage = 8;
       let currentPage = 1;
