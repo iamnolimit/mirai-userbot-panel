@@ -27,17 +27,33 @@
         }
       }
       
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        border-radius: 10px;
+      }
+      
       .main-content {
         flex: 1;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding-top: 56px; /* Kompensasi untuk fixed navbar */
+        padding-top: 75px; /* Kompensasi untuk fixed navbar */
       }
       
       .navigation-container {
         margin-top: auto;
         padding: 1.5rem 0;
+        display: flex;
+        justify-content: center;
+      }
+      
+      .nav-buttons {
+        display: flex;
+        gap: 1rem;
       }
       
       .content-container {
@@ -54,23 +70,70 @@
       
       .doc-button {
         height: 100px; /* Fixed height for all buttons */
+        width: 100%; /* Full width within grid cell */
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: flex-start;
         text-align: left;
         transition: transform 0.2s, box-shadow 0.2s;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        padding: 1rem;
+        color: white;
       }
       
       .doc-button:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        background: rgba(255, 255, 255, 0.3);
+      }
+      
+      .navbar {
+        background: rgba(255, 255, 255, 0.2) !important;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      
+      .nav-button {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        color: white;
+        padding: 0.5rem 1.5rem;
+        transition: all 0.3s;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      
+      .nav-button:hover:not(:disabled) {
+        background: rgba(255, 255, 255, 0.3);
         transform: translateY(-3px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        box-shadow: 0 7px 14px rgba(0, 0, 0, 0.2);
+      }
+      
+      .nav-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      
+      .modal-content {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
       }
     </style>
   </head>
   <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand bg-primary navbar-dark fixed-top">
+    <!-- Navbar with Glass effect -->
+    <nav class="navbar navbar-expand navbar-dark fixed-top">
       <div class="container">
         <a class="navbar-brand" href="#">Dokumentasi</a>
       </div>
@@ -81,11 +144,11 @@
       <div id="buttonContainer" class="button-grid content-container"></div>
     </div>
     
-    <!-- Navigation container at bottom with same margin -->
-    <div class="container navigation-container">
-      <div class="d-flex justify-content-between content-container">
-        <button id="prevButton" class="btn btn-outline-light">&laquo; Prev</button>
-        <button id="nextButton" class="btn btn-outline-light">Next &raquo;</button>
+    <!-- Centered Navigation container -->
+    <div class="navigation-container">
+      <div class="nav-buttons glass-effect">
+        <button id="prevButton" class="nav-button">&laquo; Prev</button>
+        <button id="nextButton" class="nav-button">Next &raquo;</button>
       </div>
     </div>
 
@@ -278,7 +341,7 @@
           // Create button with data from docsData array
           const button = document.createElement('button');
           button.type = 'button';
-          button.className = 'btn btn-primary doc-button';
+          button.className = 'doc-button';
           button.innerHTML = `
             <strong>${doc.title}</strong>
           `;
@@ -296,7 +359,8 @@
         // add empty placeholders to maintain grid layout
         for (let i = endIndex - startIndex; i < buttonsPerPage; i++) {
           const placeholder = document.createElement('div');
-          placeholder.className = 'doc-button-placeholder';
+          placeholder.className = 'doc-button';
+          placeholder.style.visibility = 'hidden'; // Make invisible but keep the space
           buttonContainer.appendChild(placeholder);
         }
       }
@@ -353,19 +417,15 @@
         // Disable previous button if on first page
         if (currentPage === 1) {
           prevButton.disabled = true;
-          prevButton.classList.add('disabled');
         } else {
           prevButton.disabled = false;
-          prevButton.classList.remove('disabled');
         }
         
         // Disable next button if on last page
         if (currentPage === totalPages || totalPages === 0) {
           nextButton.disabled = true;
-          nextButton.classList.add('disabled');
         } else {
           nextButton.disabled = false;
-          nextButton.classList.remove('disabled');
         }
       }
       
