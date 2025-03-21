@@ -138,6 +138,7 @@
   border-radius: 10px;
   padding: 1rem;
   color: white;
+  margin: 10px;
 }
 
 .doc-button:hover {
@@ -152,6 +153,18 @@
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.navigation-container {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
 }
 
 .nav-button {
@@ -193,6 +206,20 @@
   background-color: rgba(255, 255, 255, 0.05);
   border-color: rgba(255, 255, 255, 0.08);
   color: white;
+}
+
+.button-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .button-grid {
+    grid-template-columns: 1fr;
+  }
 }
     </style>
   </head>
@@ -244,7 +271,10 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script src="{{ url_for('static', filename='js/docs.js') }}"></script>
+    
+    <!-- Load the docs.js file directly (not using Flask url_for) -->
+    <script src="docs.js"></script>
+    
     <script>
       // Pagination configuration
       const buttonsPerPage = 8;
