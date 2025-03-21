@@ -13,6 +13,7 @@
         background-color: #000;
         position: relative;
         overflow-x: hidden;
+        padding-bottom: 80px; /* Added padding to ensure navigation is visible */
       }
 
       /* Create the balls/spheres background */
@@ -115,8 +116,9 @@
         flex: 1;
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start; /* Changed from center to flex-start */
         padding-top: 75px;
+        padding-bottom: 20px;
         z-index: 1;
       }
 
@@ -156,10 +158,19 @@
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
 
+      /* Modified navigation container to be fixed at bottom */
       .navigation-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
         display: flex;
         justify-content: center;
-        margin: 2rem 0;
+        padding: 1rem;
+        z-index: 1000;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
       }
 
       .nav-buttons {
@@ -213,16 +224,96 @@
       .button-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr); /* 2 columns */
-        grid-template-rows: repeat(4, auto); /* 4 rows */
         gap: 1rem;
         width: 100%;
         max-width: 900px;
         margin: 0 auto;
       }
+      
+      /* User profile panel styles */
+      .user-profile {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        border-radius: 10px;
+        padding: 1.5rem;
+        color: white;
+        margin-bottom: 1.5rem;
+        width: 100%;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      
+      .user-profile .name {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0.25rem;
+      }
+      
+      .user-profile .username {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 1rem;
+      }
+      
+      .user-profile .bio {
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+        line-height: 1.4;
+      }
+      
+      .user-profile .expired {
+        font-size: 0.85rem;
+        color: #ffc107;
+        margin-bottom: 1rem;
+      }
+      
+      .user-profile .buttons {
+        display: flex;
+        gap: 0.75rem;
+      }
+      
+      .user-profile .button {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        font-size: 0.85rem;
+        text-decoration: none;
+        transition: all 0.3s;
+      }
+      
+      .user-profile .button:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+      }
 
+      /* Maintain layout for mobile */
       @media (max-width: 768px) {
         .button-grid {
-          grid-template-columns: 1fr;
+          grid-template-columns: repeat(2, 1fr); /* Keep 2 columns on mobile */
+        }
+        
+        .doc-button {
+          height: 80px; /* Slightly smaller on mobile */
+          padding: 0.75rem;
+        }
+        
+        .user-profile {
+          padding: 1rem;
+        }
+        
+        .user-profile .buttons {
+          flex-direction: row; /* Keep as row on mobile */
+          flex-wrap: wrap;
+        }
+        
+        .navigation-container {
+          padding: 0.75rem;
         }
       }
     </style>
@@ -245,11 +336,23 @@
     </nav>
     
     <div class="container main-content">
+      <!-- User Profile Panel -->
+      <div class="user-profile">
+        <div class="name">John Doe</div>
+        <div class="username">@johndoe</div>
+        <div class="bio">Frontend developer passionate about creating beautiful user interfaces and optimizing user experience.</div>
+        <div class="expired">Expired: March 22, 2026</div>
+        <div class="buttons">
+          <a href="https://t.me/miraibotsupport" class="button" target="_blank">Support</a>
+          <a href="https://t.me/miraibotchannel" class="button" target="_blank">Owner</a>
+        </div>
+      </div>
+      
       <!-- Button container with 2x4 grid in center of screen -->
       <div id="buttonContainer" class="button-grid"></div>
     </div>
     
-    <!-- Centered Navigation container -->
+    <!-- Centered Navigation container - fixed at bottom -->
     <div class="navigation-container">
       <div class="nav-buttons glass-effect">
         <button id="prevButton" class="nav-button">&laquo; Prev</button>
@@ -514,7 +617,7 @@ const docsData = [
         const startIndex = (page - 1) * buttonsPerPage;
         const endIndex = Math.min(startIndex + buttonsPerPage, docsData.length);
         
-        // Display buttons for selected page in 2x4 grid layout
+        // Display buttons for current page
         for (let i = startIndex; i < endIndex; i++) {
           const doc = docsData[i];
           const docIndex = i; // Save index for reference
@@ -534,16 +637,6 @@ const docsData = [
           
           // Add button to container
           buttonContainer.appendChild(button);
-        }
-        
-        // If number of buttons on last page is less than buttonsPerPage,
-        // add empty placeholders to maintain grid layout
-        const remainingPlaceholders = buttonsPerPage - (endIndex - startIndex);
-        for (let i = 0; i < remainingPlaceholders; i++) {
-          const placeholder = document.createElement('div');
-          placeholder.className = 'doc-button';
-          placeholder.style.visibility = 'hidden'; // Make invisible but keep the space
-          buttonContainer.appendChild(placeholder);
         }
       }
       
