@@ -10,50 +10,20 @@
         min-height: 100vh;
         display: flex;
         flex-direction: column;
-        background: #f8f9fa;
-        position: relative;
-        overflow-x: hidden;
+        background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+        background-size: 400% 400%;
+        animation: gradient 15s ease infinite;
       }
       
-      /* Gradient Blob Effect */
-      body::before,
-      body::after {
-        content: "";
-        position: fixed;
-        width: 60vmax;
-        height: 60vmax;
-        border-radius: 50%;
-        opacity: 0.15;
-        z-index: -1;
-        filter: blur(60px);
-        animation: blob-animation 15s infinite alternate ease-in-out;
-      }
-      
-      body::before {
-        background: linear-gradient(45deg, #4361ee, #4cc9f0);
-        top: -20vmax;
-        left: -10vmax;
-        animation-delay: -5s;
-      }
-      
-      body::after {
-        background: linear-gradient(45deg, #3a86ff, #4cc9f0);
-        bottom: -20vmax;
-        right: -10vmax;
-      }
-      
-      @keyframes blob-animation {
+      @keyframes gradient {
         0% {
-          transform: translate(0, 0) scale(1);
+          background-position: 0% 50%;
         }
-        33% {
-          transform: translate(5%, 5%) scale(1.1);
-        }
-        66% {
-          transform: translate(-5%, 5%) scale(0.9);
+        50% {
+          background-position: 100% 50%;
         }
         100% {
-          transform: translate(0, 0) scale(1);
+          background-position: 0% 50%;
         }
       }
       
@@ -62,7 +32,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding-top: 70px; /* Kompensasi untuk fixed navbar */
+        padding-top: 56px; /* Kompensasi untuk fixed navbar */
       }
       
       .navigation-container {
@@ -76,123 +46,52 @@
         margin-right: auto;
       }
       
-      /* Shadow effect for buttons */
+      .button-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+      
       .doc-button {
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 110, 255, 0.1);
-        transition: all 0.3s ease;
-        border: none;
-        background: white;
+        height: 100px; /* Fixed height for all buttons */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        text-align: left;
+        transition: transform 0.2s, box-shadow 0.2s;
       }
       
       .doc-button:hover {
         transform: translateY(-3px);
-        box-shadow: 0 8px 15px rgba(0, 110, 255, 0.15);
-        background: white;
-      }
-      
-      .doc-button strong {
-        color: #0d6efd;
-      }
-      
-      /* Navigation buttons with proper margins */
-      .nav-btn {
-        border-radius: 30px;
-        padding: 0.6rem 1.5rem;
-        box-shadow: 0 4px 8px rgba(0, 110, 255, 0.1);
-        transition: all 0.3s ease;
-        margin: 0 15px;
-        border: none;
-      }
-      
-      .nav-btn:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(0, 110, 255, 0.15);
-      }
-      
-      .nav-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
-      
-      /* Navbar styling */
-      .navbar {
-        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
-        background: rgba(255, 255, 255, 0.9) !important;
-        backdrop-filter: blur(10px);
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-      }
-      
-      .navbar-brand {
-        font-weight: 600;
-        color: #0d6efd !important;
-      }
-      
-      /* Modal styling */
-      .modal-content {
-        border-radius: 15px;
-        border: none;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      }
-      
-      .modal-header {
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        padding: 1.25rem 1.5rem;
-      }
-      
-      .modal-title {
-        font-weight: 600;
-        color: #0d6efd;
-      }
-      
-      .modal-body {
-        padding: 1.5rem;
-      }
-      
-      .modal-footer {
-        border-top: 1px solid rgba(0, 0, 0, 0.05);
-        padding: 1rem 1.5rem;
-      }
-      
-      .list-group-item {
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        margin-bottom: 0.5rem;
-        border-radius: 8px !important;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
-      }
-      
-      /* Center modal vertically */
-      .modal-dialog {
-        display: flex;
-        align-items: center;
-        min-height: calc(100% - 1rem);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
       }
     </style>
   </head>
   <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand navbar-light fixed-top">
+    <nav class="navbar navbar-expand bg-primary navbar-dark fixed-top">
       <div class="container">
         <a class="navbar-brand" href="#">Dokumentasi</a>
       </div>
     </nav>
     
     <div class="container main-content">
-      <!-- Button container dengan grid 2x4 di tengah layar -->
-      <div id="buttonContainer" class="row row-cols-2 g-4 content-container"></div>
+      <!-- Button container with 2x4 grid in center of screen -->
+      <div id="buttonContainer" class="button-grid content-container"></div>
     </div>
     
-    <!-- Navigation container di bawah layar dengan margin yang sama -->
+    <!-- Navigation container at bottom with same margin -->
     <div class="container navigation-container">
-      <div class="d-flex justify-content-center content-container">
-        <button id="prevButton" class="btn btn-primary nav-btn">&laquo; Prev</button>
-        <button id="nextButton" class="btn btn-primary nav-btn">Next &raquo;</button>
+      <div class="d-flex justify-content-between content-container">
+        <button id="prevButton" class="btn btn-outline-light">&laquo; Prev</button>
+        <button id="nextButton" class="btn btn-outline-light">Next &raquo;</button>
       </div>
     </div>
 
-    <!-- Modal untuk menampilkan detail dokumen -->
+    <!-- Modal to display document details -->
     <div class="modal fade" id="docDetailModal" tabindex="-1" aria-labelledby="docDetailModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="docDetailModalLabel"></h5>
@@ -201,7 +100,7 @@
           <div class="modal-body" id="modalContent">
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
@@ -210,11 +109,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     
     <script>
-      // Konfigurasi pagination
+      // Pagination configuration
       const buttonsPerPage = 8;
       let currentPage = 1;
       
-      // Data statis, tidak perlu fetch dari docs.json
+      // Static data, no need to fetch from docs.json
       const docsData = [
         {
           "title": "Pengaturan Server",
@@ -362,74 +261,67 @@
         }
       ];
       
-      // Fungsi untuk menampilkan button berdasarkan halaman
+      // Function to display buttons based on page
       function displayButtons(page) {
         const buttonContainer = document.getElementById('buttonContainer');
         buttonContainer.innerHTML = '';
         
-        // Menghitung start dan end index
+        // Calculate start and end index
         const startIndex = (page - 1) * buttonsPerPage;
         const endIndex = Math.min(startIndex + buttonsPerPage, docsData.length);
         
-        // Menampilkan button untuk halaman yang dipilih dalam layout grid 2x4
+        // Display buttons for selected page in 2x4 grid layout
         for (let i = startIndex; i < endIndex; i++) {
           const doc = docsData[i];
-          const docIndex = i; // Simpan indeks untuk referensi
+          const docIndex = i; // Save index for reference
           
-          // Buat div col untuk setiap button untuk grid layout
-          const col = document.createElement('div');
-          col.className = 'col';
-          
-          // Buat button dengan data dari array docsData
+          // Create button with data from docsData array
           const button = document.createElement('button');
           button.type = 'button';
-          button.className = 'btn doc-button w-100 py-3 h-100';
+          button.className = 'btn btn-primary doc-button';
           button.innerHTML = `
-            <div class="d-flex flex-column align-items-start text-start">
-              <strong>${doc.title}</strong>
-            </div>
+            <strong>${doc.title}</strong>
           `;
           
-          // Tambahkan event listener untuk menampilkan detail
+          // Add event listener to display details
           button.addEventListener('click', function() {
             showDocDetail(docIndex);
           });
           
-          // Tambahkan button ke col, dan col ke container
-          col.appendChild(button);
-          buttonContainer.appendChild(col);
+          // Add button to container
+          buttonContainer.appendChild(button);
         }
         
-        // Jika jumlah tombol di halaman terakhir kurang dari buttonsPerPage,
-        // tambahkan kolom kosong untuk menjaga layout grid
+        // If number of buttons on last page is less than buttonsPerPage,
+        // add empty placeholders to maintain grid layout
         for (let i = endIndex - startIndex; i < buttonsPerPage; i++) {
-          const col = document.createElement('div');
-          col.className = 'col';
-          buttonContainer.appendChild(col);
+          const placeholder = document.createElement('div');
+          placeholder.className = 'doc-button-placeholder';
+          buttonContainer.appendChild(placeholder);
         }
       }
       
-      // Fungsi untuk menampilkan detail dokumen dalam modal yang sudah ada
+      // Function to display document details in existing modal
       function showDocDetail(docIndex) {
         const doc = docsData[docIndex];
         
-        // Perbarui isi modal
+        // Update modal content
         document.getElementById('docDetailModalLabel').textContent = doc.title;
         
         let modalContent = `
           <p>${doc.description}</p>
-          <h6 class="mt-4 mb-3">Commands:</h6>
+          <h6 class="mt-4">Commands:</h6>
           ${renderCommands(doc.commands)}
         `;
         
         document.getElementById('modalContent').innerHTML = modalContent;
         
-        // Tampilkan modal
+        // Show modal
         const modal = new bootstrap.Modal(document.getElementById('docDetailModal'));
         modal.show();
       }
       
-      // Fungsi untuk merender command dalam dokumen
+      // Function to render commands in document
       function renderCommands(commands) {
         if (!commands || Object.keys(commands).length === 0) {
           return '<div class="alert alert-light">No commands available</div>';
@@ -451,14 +343,14 @@
         return commandsHtml;
       }
       
-      // Fungsi untuk mengupdate status tombol prev/next
+      // Function to update prev/next button status
       function updateNavigationButtons() {
         const prevButton = document.getElementById('prevButton');
         const nextButton = document.getElementById('nextButton');
         
         const totalPages = Math.ceil(docsData.length / buttonsPerPage);
         
-        // Disable tombol previous jika di halaman pertama
+        // Disable previous button if on first page
         if (currentPage === 1) {
           prevButton.disabled = true;
           prevButton.classList.add('disabled');
@@ -467,7 +359,7 @@
           prevButton.classList.remove('disabled');
         }
         
-        // Disable tombol next jika di halaman terakhir
+        // Disable next button if on last page
         if (currentPage === totalPages || totalPages === 0) {
           nextButton.disabled = true;
           nextButton.classList.add('disabled');
@@ -477,7 +369,7 @@
         }
       }
       
-      // Setup event listeners untuk tombol navigasi
+      // Setup event listeners for navigation buttons
       function setupEventListeners() {
         const prevButton = document.getElementById('prevButton');
         const nextButton = document.getElementById('nextButton');
@@ -504,10 +396,10 @@
         updateNavigationButtons();
       }
       
-      // Inisialisasi halaman
+      // Initialize page
       document.addEventListener('DOMContentLoaded', function() {
         setupEventListeners();
-        updateUI(); // Langsung update UI tanpa perlu fetch
+        updateUI(); // Update UI immediately without needing to fetch
       });
     </script>
   </body>
