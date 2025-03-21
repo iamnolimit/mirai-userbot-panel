@@ -53,59 +53,182 @@
       </div>
     </div>
 
+    <!-- Modal untuk menampilkan detail dokumen -->
+    <div class="modal fade" id="docDetailModal" tabindex="-1" aria-labelledby="docDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="docDetailModalLabel"></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="modalContent">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     
     <script>
       // Konfigurasi pagination
       const buttonsPerPage = 8;
       let currentPage = 1;
-      let docsData = []; // Untuk menyimpan data dari JSON
       
-      // Fungsi untuk memuat data dari file JSON
-      async function loadDocsData() {
-        try {
-          const response = await fetch('./docs.json');
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
+      // Data statis, tidak perlu fetch dari docs.json
+      const docsData = [
+        {
+          "title": "Pengaturan Server",
+          "description": "Panduan untuk mengatur server aplikasi",
+          "commands": {
+            "command1": {
+              "command": "server start",
+              "commanddesc": "Memulai server pada port default"
+            },
+            "command2": {
+              "command": "server stop",
+              "commanddesc": "Menghentikan server yang sedang berjalan"
+            },
+            "command3": {
+              "command": "server restart",
+              "commanddesc": "Memulai ulang server aplikasi"
+            }
           }
-          docsData = await response.json();
-          
-          // Setelah data dimuat, update UI
-          const totalPages = Math.ceil(docsData.length / buttonsPerPage);
-          
-          // Jika halaman saat ini melebihi total halaman, reset ke halaman 1
-          if (currentPage > totalPages) {
-            currentPage = 1;
+        },
+        {
+          "title": "Manajemen Pengguna",
+          "description": "Cara mengelola pengguna dalam sistem",
+          "commands": {
+            "command1": {
+              "command": "user add [nama]",
+              "commanddesc": "Menambahkan pengguna baru"
+            },
+            "command2": {
+              "command": "user delete [id]",
+              "commanddesc": "Menghapus pengguna berdasarkan ID"
+            }
           }
-          
-          updateUI();
-        } catch (error) {
-          console.error('Error loading docs data:', error);
-          
-          // Tampilkan pesan error di dalam buttonContainer
-          const buttonContainer = document.getElementById('buttonContainer');
-          buttonContainer.innerHTML = `
-            <div class="col-12 text-center">
-              <div class="alert alert-danger">
-                Error loading documentation data. Please check if docs.json exists.
-              </div>
-            </div>
-          `;
-          
-          // Disable tombol navigasi
-          document.getElementById('prevButton').disabled = true;
-          document.getElementById('nextButton').disabled = true;
+        },
+        {
+          "title": "Konfigurasi Database",
+          "description": "Pengaturan koneksi database",
+          "commands": {
+            "command1": {
+              "command": "db connect [url]",
+              "commanddesc": "Menghubungkan ke database"
+            },
+            "command2": {
+              "command": "db backup",
+              "commanddesc": "Membuat backup database"
+            }
+          }
+        },
+        {
+          "title": "Pengelolaan File",
+          "description": "Operasi untuk mengelola file dalam sistem",
+          "commands": {
+            "command1": {
+              "command": "file upload [path]",
+              "commanddesc": "Mengunggah file ke server"
+            },
+            "command2": {
+              "command": "file list",
+              "commanddesc": "Menampilkan daftar file"
+            }
+          }
+        },
+        {
+          "title": "Monitoring",
+          "description": "Memantau kinerja dan status aplikasi",
+          "commands": {
+            "command1": {
+              "command": "monitor status",
+              "commanddesc": "Melihat status server saat ini"
+            },
+            "command2": {
+              "command": "monitor logs",
+              "commanddesc": "Menampilkan log terbaru"
+            }
+          }
+        },
+        {
+          "title": "Keamanan",
+          "description": "Pengaturan keamanan sistem",
+          "commands": {
+            "command1": {
+              "command": "security scan",
+              "commanddesc": "Melakukan pemindaian keamanan"
+            },
+            "command2": {
+              "command": "security update",
+              "commanddesc": "Memperbarui modul keamanan"
+            }
+          }
+        },
+        {
+          "title": "Backup & Restore",
+          "description": "Prosedur backup dan pemulihan data",
+          "commands": {
+            "command1": {
+              "command": "backup create",
+              "commanddesc": "Membuat backup baru"
+            },
+            "command2": {
+              "command": "backup restore [id]",
+              "commanddesc": "Memulihkan data dari backup"
+            }
+          }
+        },
+        {
+          "title": "API Integration",
+          "description": "Cara mengintegrasikan dengan API eksternal",
+          "commands": {
+            "command1": {
+              "command": "api connect [url]",
+              "commanddesc": "Menghubungkan ke API eksternal"
+            },
+            "command2": {
+              "command": "api test",
+              "commanddesc": "Menguji koneksi API"
+            }
+          }
+        },
+        {
+          "title": "Notifikasi",
+          "description": "Pengaturan sistem notifikasi",
+          "commands": {
+            "command1": {
+              "command": "notify send [pesan]",
+              "commanddesc": "Mengirim notifikasi ke pengguna"
+            },
+            "command2": {
+              "command": "notify settings",
+              "commanddesc": "Mengatur preferensi notifikasi"
+            }
+          }
+        },
+        {
+          "title": "Laporan",
+          "description": "Membuat dan mengelola laporan",
+          "commands": {
+            "command1": {
+              "command": "report generate [jenis]",
+              "commanddesc": "Membuat laporan baru"
+            },
+            "command2": {
+              "command": "report export [format]",
+              "commanddesc": "Mengekspor laporan"
+            }
+          }
         }
-      }
+      ];
       
       // Fungsi untuk menampilkan button berdasarkan halaman
       function displayButtons(page) {
         const buttonContainer = document.getElementById('buttonContainer');
         buttonContainer.innerHTML = '';
-        
-        if (docsData.length === 0) {
-          return; // Tidak ada data untuk ditampilkan
-        }
         
         // Menghitung start dan end index
         const startIndex = (page - 1) * buttonsPerPage;
@@ -114,12 +237,13 @@
         // Menampilkan button untuk halaman yang dipilih dalam layout grid 2x4
         for (let i = startIndex; i < endIndex; i++) {
           const doc = docsData[i];
+          const docIndex = i; // Simpan indeks untuk referensi
           
           // Buat div col untuk setiap button untuk grid layout
           const col = document.createElement('div');
           col.className = 'col';
           
-          // Buat button dengan data dari JSON
+          // Buat button dengan data dari array docsData
           const button = document.createElement('button');
           button.type = 'button';
           button.className = 'btn btn-primary w-100 py-3 h-100';
@@ -132,7 +256,7 @@
           
           // Tambahkan event listener untuk menampilkan detail
           button.addEventListener('click', function() {
-            showDocDetail(doc);
+            showDocDetail(docIndex);
           });
           
           // Tambahkan button ke col, dan col ke container
@@ -149,44 +273,24 @@
         }
       }
       
-      // Fungsi untuk menampilkan detail dokumen dalam modal
-      function showDocDetail(doc) {
-        // Buat modal untuk menampilkan detail
-        const modalHtml = `
-          <div class="modal fade" id="docDetailModal" tabindex="-1" aria-labelledby="docDetailModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="docDetailModalLabel">${doc.title}</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <p>${doc.description}</p>
-                  
-                  <h6 class="mt-4">Commands:</h6>
-                  ${renderCommands(doc.commands)}
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-              </div>
-            </div>
-          </div>
+      // Fungsi untuk menampilkan detail dokumen dalam modal yang sudah ada
+      function showDocDetail(docIndex) {
+        const doc = docsData[docIndex];
+        
+        // Perbarui isi modal
+        document.getElementById('docDetailModalLabel').textContent = doc.title;
+        
+        let modalContent = `
+          <p>${doc.description}</p>
+          <h6 class="mt-4">Commands:</h6>
+          ${renderCommands(doc.commands)}
         `;
         
-        // Tambahkan modal ke body
-        const modalContainer = document.createElement('div');
-        modalContainer.innerHTML = modalHtml;
-        document.body.appendChild(modalContainer);
+        document.getElementById('modalContent').innerHTML = modalContent;
         
         // Tampilkan modal
         const modal = new bootstrap.Modal(document.getElementById('docDetailModal'));
         modal.show();
-        
-        // Hapus modal dari DOM saat disembunyikan
-        document.getElementById('docDetailModal').addEventListener('hidden.bs.modal', function() {
-          document.body.removeChild(modalContainer);
-        });
       }
       
       // Fungsi untuk merender command dalam dokumen
@@ -267,7 +371,7 @@
       // Inisialisasi halaman
       document.addEventListener('DOMContentLoaded', function() {
         setupEventListeners();
-        loadDocsData(); // Memuat data dari file JSON
+        updateUI(); // Langsung update UI tanpa perlu fetch
       });
     </script>
   </body>
