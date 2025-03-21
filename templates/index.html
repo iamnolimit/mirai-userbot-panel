@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Centered Buttons with Simple Pagination</title>
+    <title>Dokumentasi</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
       body {
@@ -17,25 +17,38 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
+        padding-top: 56px; /* Kompensasi untuk fixed navbar */
       }
       
-      .pagination-container {
+      .navigation-container {
         margin-top: auto;
         padding: 1.5rem 0;
+      }
+      
+      .content-container {
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
       }
     </style>
   </head>
   <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand bg-primary navbar-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">Dokumentasi</a>
+      </div>
+    </nav>
+    
     <div class="container main-content">
       <!-- Button container dengan grid 2x4 di tengah layar -->
-      <div id="buttonContainer" class="row row-cols-2 g-3 justify-content-center" style="max-width: 600px; margin-left: auto; margin-right: auto;"></div>
+      <div id="buttonContainer" class="row row-cols-2 g-3 content-container"></div>
     </div>
     
-    <!-- Pagination container di bawah layar -->
-    <div class="container pagination-container">
-      <div class="d-flex justify-content-between">
-        <button id="prevButton" class="btn btn-outline-primary">&laquo; Previous</button>
-        <div id="pageIndicator" class="align-self-center fw-bold"></div>
+    <!-- Navigation container di bawah layar dengan margin yang sama -->
+    <div class="container navigation-container">
+      <div class="d-flex justify-content-between content-container">
+        <button id="prevButton" class="btn btn-outline-primary">&laquo; Prev</button>
         <button id="nextButton" class="btn btn-outline-primary">Next &raquo;</button>
       </div>
     </div>
@@ -43,62 +56,84 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     
     <script>
-      // Array URLs (contoh data)
-      const urls = [
-        { id: 1, url: "https://example.com/page1", title: "Halaman 1" },
-        { id: 2, url: "https://example.com/page2", title: "Halaman 2" },
-        { id: 3, url: "https://example.com/page3", title: "Halaman 3" },
-        { id: 4, url: "https://example.com/page4", title: "Halaman 4" },
-        { id: 5, url: "https://example.com/page5", title: "Halaman 5" },
-        { id: 6, url: "https://example.com/page6", title: "Halaman 6" },
-        { id: 7, url: "https://example.com/page7", title: "Halaman 7" },
-        { id: 8, url: "https://example.com/page8", title: "Halaman 8" },
-        { id: 9, url: "https://example.com/page9", title: "Halaman 9" },
-        { id: 10, url: "https://example.com/page10", title: "Halaman 10" },
-        { id: 11, url: "https://example.com/page11", title: "Halaman 11" },
-        { id: 12, url: "https://example.com/page12", title: "Halaman 12" },
-        { id: 13, url: "https://example.com/page13", title: "Halaman 13" },
-        { id: 14, url: "https://example.com/page14", title: "Halaman 14" },
-        { id: 15, url: "https://example.com/page15", title: "Halaman 15" },
-        { id: 16, url: "https://example.com/page16", title: "Halaman 16" },
-        { id: 17, url: "https://example.com/page17", title: "Halaman 17" },
-        { id: 18, url: "https://example.com/page18", title: "Halaman 18" },
-        { id: 19, url: "https://example.com/page19", title: "Halaman 19" },
-        { id: 20, url: "https://example.com/page20", title: "Halaman 20" },
-        { id: 21, url: "https://example.com/page21", title: "Halaman 21" },
-        { id: 22, url: "https://example.com/page22", title: "Halaman 22" },
-        { id: 23, url: "https://example.com/page23", title: "Halaman 23" },
-        { id: 24, url: "https://example.com/page24", title: "Halaman 24" }
-      ];
-      
       // Konfigurasi pagination
       const buttonsPerPage = 8;
       let currentPage = 1;
+      let docsData = []; // Untuk menyimpan data dari JSON
       
-      // Menghitung jumlah halaman
-      const totalPages = Math.ceil(urls.length / buttonsPerPage);
+      // Fungsi untuk memuat data dari file JSON
+      async function loadDocsData() {
+        try {
+          const response = await fetch('./docs.json');
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          docsData = await response.json();
+          
+          // Setelah data dimuat, update UI
+          const totalPages = Math.ceil(docsData.length / buttonsPerPage);
+          
+          // Jika halaman saat ini melebihi total halaman, reset ke halaman 1
+          if (currentPage > totalPages) {
+            currentPage = 1;
+          }
+          
+          updateUI();
+        } catch (error) {
+          console.error('Error loading docs data:', error);
+          
+          // Tampilkan pesan error di dalam buttonContainer
+          const buttonContainer = document.getElementById('buttonContainer');
+          buttonContainer.innerHTML = `
+            <div class="col-12 text-center">
+              <div class="alert alert-danger">
+                Error loading documentation data. Please check if docs.json exists.
+              </div>
+            </div>
+          `;
+          
+          // Disable tombol navigasi
+          document.getElementById('prevButton').disabled = true;
+          document.getElementById('nextButton').disabled = true;
+        }
+      }
       
       // Fungsi untuk menampilkan button berdasarkan halaman
       function displayButtons(page) {
         const buttonContainer = document.getElementById('buttonContainer');
         buttonContainer.innerHTML = '';
         
+        if (docsData.length === 0) {
+          return; // Tidak ada data untuk ditampilkan
+        }
+        
         // Menghitung start dan end index
         const startIndex = (page - 1) * buttonsPerPage;
-        const endIndex = Math.min(startIndex + buttonsPerPage, urls.length);
+        const endIndex = Math.min(startIndex + buttonsPerPage, docsData.length);
         
         // Menampilkan button untuk halaman yang dipilih dalam layout grid 2x4
         for (let i = startIndex; i < endIndex; i++) {
+          const doc = docsData[i];
+          
           // Buat div col untuk setiap button untuk grid layout
           const col = document.createElement('div');
           col.className = 'col';
           
-          // Buat button
-          const button = document.createElement('a');
-          button.href = urls[i].url;
-          button.className = 'btn btn-primary w-100 py-3';
-          button.textContent = urls[i].title;
-          button.target = '_blank';
+          // Buat button dengan data dari JSON
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'btn btn-primary w-100 py-3 h-100';
+          button.innerHTML = `
+            <div class="d-flex flex-column align-items-start text-start">
+              <strong>${doc.title}</strong>
+              <small class="text-truncate w-100">${doc.description}</small>
+            </div>
+          `;
+          
+          // Tambahkan event listener untuk menampilkan detail
+          button.addEventListener('click', function() {
+            showDocDetail(doc);
+          });
           
           // Tambahkan button ke col, dan col ke container
           col.appendChild(button);
@@ -112,15 +147,76 @@
           col.className = 'col';
           buttonContainer.appendChild(col);
         }
+      }
+      
+      // Fungsi untuk menampilkan detail dokumen dalam modal
+      function showDocDetail(doc) {
+        // Buat modal untuk menampilkan detail
+        const modalHtml = `
+          <div class="modal fade" id="docDetailModal" tabindex="-1" aria-labelledby="docDetailModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="docDetailModalLabel">${doc.title}</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <p>${doc.description}</p>
+                  
+                  <h6 class="mt-4">Commands:</h6>
+                  ${renderCommands(doc.commands)}
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
         
-        // Update indikator halaman
-        document.getElementById('pageIndicator').textContent = `Halaman ${page} dari ${totalPages}`;
+        // Tambahkan modal ke body
+        const modalContainer = document.createElement('div');
+        modalContainer.innerHTML = modalHtml;
+        document.body.appendChild(modalContainer);
+        
+        // Tampilkan modal
+        const modal = new bootstrap.Modal(document.getElementById('docDetailModal'));
+        modal.show();
+        
+        // Hapus modal dari DOM saat disembunyikan
+        document.getElementById('docDetailModal').addEventListener('hidden.bs.modal', function() {
+          document.body.removeChild(modalContainer);
+        });
+      }
+      
+      // Fungsi untuk merender command dalam dokumen
+      function renderCommands(commands) {
+        if (!commands || Object.keys(commands).length === 0) {
+          return '<div class="alert alert-light">No commands available</div>';
+        }
+        
+        let commandsHtml = '<div class="list-group">';
+        
+        for (const key in commands) {
+          const command = commands[key];
+          commandsHtml += `
+            <div class="list-group-item">
+              <div class="fw-bold">${command.command}</div>
+              <div class="small">${command.commanddesc}</div>
+            </div>
+          `;
+        }
+        
+        commandsHtml += '</div>';
+        return commandsHtml;
       }
       
       // Fungsi untuk mengupdate status tombol prev/next
       function updateNavigationButtons() {
         const prevButton = document.getElementById('prevButton');
         const nextButton = document.getElementById('nextButton');
+        
+        const totalPages = Math.ceil(docsData.length / buttonsPerPage);
         
         // Disable tombol previous jika di halaman pertama
         if (currentPage === 1) {
@@ -132,7 +228,7 @@
         }
         
         // Disable tombol next jika di halaman terakhir
-        if (currentPage === totalPages) {
+        if (currentPage === totalPages || totalPages === 0) {
           nextButton.disabled = true;
           nextButton.classList.add('disabled');
         } else {
@@ -154,6 +250,7 @@
         });
         
         nextButton.addEventListener('click', function() {
+          const totalPages = Math.ceil(docsData.length / buttonsPerPage);
           if (currentPage < totalPages) {
             currentPage++;
             updateUI();
@@ -170,7 +267,7 @@
       // Inisialisasi halaman
       document.addEventListener('DOMContentLoaded', function() {
         setupEventListeners();
-        updateUI();
+        loadDocsData(); // Memuat data dari file JSON
       });
     </script>
   </body>
